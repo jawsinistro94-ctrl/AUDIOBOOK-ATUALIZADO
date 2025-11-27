@@ -91,6 +91,15 @@ class AudioBook:
             print(f"Failed to load fire icon: {e}")
             self.fire_icon = None
         
+        # Load turtle icon (main logo)
+        try:
+            turtle_img = Image.open(resource_path('turtle_icon.png'))
+            turtle_img = turtle_img.resize((28, 28), Image.Resampling.LANCZOS)
+            self.turtle_icon = ImageTk.PhotoImage(turtle_img)
+        except Exception as e:
+            print(f"Failed to load turtle icon: {e}")
+            self.turtle_icon = None
+        
         # Load trophy icon
         try:
             trophy_img = Image.open(resource_path('trophy_icon.png'))
@@ -202,16 +211,16 @@ class AudioBook:
         header_inner = ctk.CTkFrame(header_frame, fg_color="transparent")
         header_inner.pack(fill=tk.X, padx=12, pady=8)
         
-        # Left side - Title with fire icon
+        # Left side - Title with turtle icon
         title_frame = ctk.CTkFrame(header_inner, fg_color="transparent")
         title_frame.pack(side=tk.LEFT)
         
-        if self.fire_icon:
-            tk.Label(title_frame, image=self.fire_icon, bg=self.colors['bg_secondary']).pack(side=tk.LEFT, padx=2)
+        if self.turtle_icon:
+            tk.Label(title_frame, image=self.turtle_icon, bg=self.colors['bg_secondary']).pack(side=tk.LEFT, padx=2)
         
         ctk.CTkLabel(title_frame, text="AudioBook v2.0", 
                     font=ctk.CTkFont(family="Georgia", size=14, weight="bold"),
-                    text_color=self.colors['text_header']).pack(side=tk.LEFT, padx=6)
+                    fg=self.colors['text_header']).pack(side=tk.LEFT, padx=6)
         
         # Right side - Status toggle
         status_frame = ctk.CTkFrame(header_inner, fg_color="transparent")
@@ -220,11 +229,11 @@ class AudioBook:
         # Alt+F12 hint
         ctk.CTkLabel(status_frame, text="Alt+F12: Pausar", 
                     font=ctk.CTkFont(family="Consolas", size=10),
-                    text_color=self.colors['text_subdued']).pack(side=tk.LEFT, padx=10)
+                    fg=self.colors['text_subdued']).pack(side=tk.LEFT, padx=10)
         
         self.status_label = ctk.CTkLabel(status_frame, text="ON", 
                                          font=ctk.CTkFont(family="Georgia", size=12, weight="bold"),
-                                         text_color=self.colors['status_on'])
+                                         fg=self.colors['status_on'])
         self.status_label.pack(side=tk.LEFT, padx=6)
         
         # Modern toggle switch for ON/OFF
@@ -248,7 +257,7 @@ class AudioBook:
         
         ctk.CTkLabel(profile_inner, text="Perfil:", 
                     font=ctk.CTkFont(family="Georgia", size=11, weight="bold"),
-                    text_color=self.colors['text_header']).pack(side=tk.LEFT, padx=4)
+                    fg=self.colors['text_header']).pack(side=tk.LEFT, padx=4)
         
         self.current_profile = tk.StringVar(value="Padrão")
         self.profile_dropdown = ctk.CTkOptionMenu(profile_inner, variable=self.current_profile,
@@ -259,24 +268,24 @@ class AudioBook:
                                                   button_hover_color=self.colors['button_hover'],
                                                   dropdown_fg_color=self.colors['bg_secondary'],
                                                   dropdown_hover_color=self.colors['selection'],
-                                                  text_color=self.colors['text_body'],
+                                                  fg=self.colors['text_body'],
                                                   font=ctk.CTkFont(family="Georgia", size=10),
                                                   command=lambda x: self.switch_profile())
         self.profile_dropdown.pack(side=tk.LEFT, padx=6)
         
         ctk.CTkButton(profile_inner, text="+", width=32, height=28, corner_radius=6,
                      fg_color=self.colors['button_default'], hover_color=self.colors['button_hover'],
-                     text_color=self.colors['text_header'], font=ctk.CTkFont(size=14, weight="bold"),
+                     fg=self.colors['text_header'], font=ctk.CTkFont(size=14, weight="bold"),
                      command=self.create_profile).pack(side=tk.LEFT, padx=2)
         
         ctk.CTkButton(profile_inner, text="Ren", width=40, height=28, corner_radius=6,
                      fg_color=self.colors['button_default'], hover_color=self.colors['button_hover'],
-                     text_color=self.colors['text_header'], font=ctk.CTkFont(size=10),
+                     fg=self.colors['text_header'], font=ctk.CTkFont(size=10),
                      command=self.rename_profile).pack(side=tk.LEFT, padx=2)
         
         ctk.CTkButton(profile_inner, text="X", width=32, height=28, corner_radius=6,
                      fg_color=self.colors['button_destructive'], hover_color="#8B2020",
-                     text_color=self.colors['text_header'], font=ctk.CTkFont(size=12, weight="bold"),
+                     fg=self.colors['text_header'], font=ctk.CTkFont(size=12, weight="bold"),
                      command=self.delete_profile).pack(side=tk.LEFT, padx=2)
         
         # ===== MODERN TABVIEW =====
@@ -287,7 +296,7 @@ class AudioBook:
                                       segmented_button_selected_hover_color=self.colors['button_hover'],
                                       segmented_button_unselected_color=self.colors['bg_inset'],
                                       segmented_button_unselected_hover_color=self.colors['button_default'],
-                                      text_color=self.colors['text_body'],
+                                      fg=self.colors['text_body'],
                                       text_color_disabled=self.colors['text_subdued'])
         self.tabview.pack(fill=tk.BOTH, expand=True, pady=4)
         
@@ -339,13 +348,13 @@ class AudioBook:
         
         # Name label
         ctk.CTkLabel(sd_inner, text="Auto SD", font=ctk.CTkFont(family="Georgia", size=11, weight="bold"),
-                    text_color=self.colors['text_header'], width=70).pack(side=tk.LEFT, padx=4)
+                    fg=self.colors['text_header'], width=70).pack(side=tk.LEFT, padx=4)
         
         # Hotkey badge (gradient style)
         self.sd_hotkey_btn = ctk.CTkButton(sd_inner, text=self.auto_sd_hotkey.get(), width=50, height=24,
                                            corner_radius=6, fg_color=self.colors['button_default'],
                                            hover_color=self.colors['button_hover'],
-                                           text_color=self.colors['text_body'],
+                                           fg=self.colors['text_body'],
                                            font=ctk.CTkFont(family="Consolas", size=10, weight="bold"),
                                            command=lambda: self.change_quick_hotkey('sd'))
         self.sd_hotkey_btn.pack(side=tk.LEFT, padx=4)
@@ -367,7 +376,7 @@ class AudioBook:
         
         self.sd_delay_label = ctk.CTkLabel(sd_inner, text=f"{self.auto_sd_delay.get()}ms", width=50,
                                            font=ctk.CTkFont(family="Consolas", size=10),
-                                           text_color=self.colors['text_subdued'])
+                                           fg=self.colors['text_subdued'])
         self.sd_delay_label.pack(side=tk.LEFT)
         self.auto_sd_delay.trace('w', lambda *args: self.sd_delay_label.configure(text=f"{self.auto_sd_delay.get()}ms"))
         
@@ -401,12 +410,12 @@ class AudioBook:
             tk.Label(explo_inner, image=self.explo_icon_photo, bg=self.colors['bg_secondary']).pack(side=tk.LEFT, padx=4)
         
         ctk.CTkLabel(explo_inner, text="Auto EXPLO", font=ctk.CTkFont(family="Georgia", size=11, weight="bold"),
-                    text_color=self.colors['text_header'], width=70).pack(side=tk.LEFT, padx=4)
+                    fg=self.colors['text_header'], width=70).pack(side=tk.LEFT, padx=4)
         
         self.explo_hotkey_btn = ctk.CTkButton(explo_inner, text=self.auto_explo_hotkey.get(), width=50, height=24,
                                               corner_radius=6, fg_color=self.colors['button_default'],
                                               hover_color=self.colors['button_hover'],
-                                              text_color=self.colors['text_body'],
+                                              fg=self.colors['text_body'],
                                               font=ctk.CTkFont(family="Consolas", size=10, weight="bold"),
                                               command=lambda: self.change_quick_hotkey('explo'))
         self.explo_hotkey_btn.pack(side=tk.LEFT, padx=4)
@@ -425,7 +434,7 @@ class AudioBook:
         
         self.explo_delay_label = ctk.CTkLabel(explo_inner, text=f"{self.auto_explo_delay.get()}ms", width=50,
                                               font=ctk.CTkFont(family="Consolas", size=10),
-                                              text_color=self.colors['text_subdued'])
+                                              fg=self.colors['text_subdued'])
         self.explo_delay_label.pack(side=tk.LEFT)
         self.auto_explo_delay.trace('w', lambda *args: self.explo_delay_label.configure(text=f"{self.auto_explo_delay.get()}ms"))
         
@@ -459,12 +468,12 @@ class AudioBook:
             tk.Label(uh_inner, image=self.uh_icon_photo, bg=self.colors['bg_secondary']).pack(side=tk.LEFT, padx=4)
         
         ctk.CTkLabel(uh_inner, text="Auto UH", font=ctk.CTkFont(family="Georgia", size=11, weight="bold"),
-                    text_color=self.colors['text_header'], width=70).pack(side=tk.LEFT, padx=4)
+                    fg=self.colors['text_header'], width=70).pack(side=tk.LEFT, padx=4)
         
         self.uh_hotkey_btn = ctk.CTkButton(uh_inner, text=self.auto_uh_hotkey.get(), width=50, height=24,
                                            corner_radius=6, fg_color=self.colors['button_default'],
                                            hover_color=self.colors['button_hover'],
-                                           text_color=self.colors['text_body'],
+                                           fg=self.colors['text_body'],
                                            font=ctk.CTkFont(family="Consolas", size=10, weight="bold"),
                                            command=lambda: self.change_quick_hotkey('uh'))
         self.uh_hotkey_btn.pack(side=tk.LEFT, padx=4)
@@ -483,7 +492,7 @@ class AudioBook:
         
         self.uh_delay_label = ctk.CTkLabel(uh_inner, text=f"{self.auto_uh_delay.get()}ms", width=50,
                                            font=ctk.CTkFont(family="Consolas", size=10),
-                                           text_color=self.colors['text_subdued'])
+                                           fg=self.colors['text_subdued'])
         self.uh_delay_label.pack(side=tk.LEFT)
         self.auto_uh_delay.trace('w', lambda *args: self.uh_delay_label.configure(text=f"{self.auto_uh_delay.get()}ms"))
         
@@ -517,12 +526,12 @@ class AudioBook:
             tk.Label(mana_inner, image=self.mana_icon_photo, bg=self.colors['bg_secondary']).pack(side=tk.LEFT, padx=4)
         
         ctk.CTkLabel(mana_inner, text="Auto Mana", font=ctk.CTkFont(family="Georgia", size=11, weight="bold"),
-                    text_color=self.colors['text_header'], width=70).pack(side=tk.LEFT, padx=4)
+                    fg=self.colors['text_header'], width=70).pack(side=tk.LEFT, padx=4)
         
         self.mana_hotkey_btn = ctk.CTkButton(mana_inner, text=self.auto_mana_hotkey.get(), width=50, height=24,
                                              corner_radius=6, fg_color=self.colors['button_default'],
                                              hover_color=self.colors['button_hover'],
-                                             text_color=self.colors['text_body'],
+                                             fg=self.colors['text_body'],
                                              font=ctk.CTkFont(family="Consolas", size=10, weight="bold"),
                                              command=lambda: self.change_quick_hotkey('mana'))
         self.mana_hotkey_btn.pack(side=tk.LEFT, padx=4)
@@ -541,7 +550,7 @@ class AudioBook:
         
         self.mana_delay_label = ctk.CTkLabel(mana_inner, text=f"{self.auto_mana_delay.get()}ms", width=50,
                                              font=ctk.CTkFont(family="Consolas", size=10),
-                                             text_color=self.colors['text_subdued'])
+                                             fg=self.colors['text_subdued'])
         self.mana_delay_label.pack(side=tk.LEFT)
         self.auto_mana_delay.trace('w', lambda *args: self.mana_delay_label.configure(text=f"{self.auto_mana_delay.get()}ms"))
         
@@ -573,11 +582,11 @@ class AudioBook:
         
         ctk.CTkLabel(rm_toggle_inner, text="Runemaker Ativo", 
                     font=ctk.CTkFont(family="Georgia", size=12, weight="bold"),
-                    text_color=self.colors['text_header']).pack(side=tk.LEFT, padx=8)
+                    fg=self.colors['text_header']).pack(side=tk.LEFT, padx=8)
         
         self.rm_status_label = ctk.CTkLabel(rm_toggle_inner, text="[PARADO]", 
                                             font=ctk.CTkFont(family="Consolas", size=10, weight="bold"),
-                                            text_color=self.colors['status_off'])
+                                            fg=self.colors['status_off'])
         self.rm_status_label.pack(side=tk.RIGHT, padx=10)
         
         # Config frame for Runemaker options
@@ -593,16 +602,16 @@ class AudioBook:
         rm_row1.pack(fill=tk.X, pady=4)
         
         ctk.CTkLabel(rm_row1, text="Potion:", font=ctk.CTkFont(family="Georgia", size=10, weight="bold"),
-                    text_color=self.colors['text_body'], width=80).pack(side=tk.LEFT)
+                    fg=self.colors['text_body'], width=80).pack(side=tk.LEFT)
         
         ctk.CTkButton(rm_row1, text="📍 Gravar", width=80, height=24, corner_radius=6,
                      fg_color=self.colors['button_default'], hover_color=self.colors['button_hover'],
-                     text_color=self.colors['text_body'], font=ctk.CTkFont(size=10),
+                     fg=self.colors['text_body'], font=ctk.CTkFont(size=10),
                      command=self.record_runemaker_potion).pack(side=tk.LEFT, padx=4)
         
         self.rm_potion_status = ctk.CTkLabel(rm_row1, text="[Nao gravado]", width=120,
                                              font=ctk.CTkFont(family="Consolas", size=9, weight="bold"),
-                                             text_color=self.colors['text_subdued'])
+                                             fg=self.colors['text_subdued'])
         self.rm_potion_status.pack(side=tk.LEFT, padx=8)
         
         # Row 2: Spell hotkey
@@ -610,25 +619,25 @@ class AudioBook:
         rm_row2.pack(fill=tk.X, pady=4)
         
         ctk.CTkLabel(rm_row2, text="Spell:", font=ctk.CTkFont(family="Georgia", size=10, weight="bold"),
-                    text_color=self.colors['text_body'], width=80).pack(side=tk.LEFT)
+                    fg=self.colors['text_body'], width=80).pack(side=tk.LEFT)
         
         self.rm_spell_hotkey = tk.StringVar(value="F6")
         self.rm_spell_btn = ctk.CTkButton(rm_row2, text=self.rm_spell_hotkey.get(), width=50, height=24,
                                           corner_radius=6, fg_color=self.colors['selection'],
                                           hover_color=self.colors['button_hover'],
-                                          text_color="#FFFFFF", font=ctk.CTkFont(family="Consolas", size=10, weight="bold"),
+                                          fg="#FFFFFF", font=ctk.CTkFont(family="Consolas", size=10, weight="bold"),
                                           command=lambda: self.change_runemaker_hotkey('spell'))
         self.rm_spell_btn.pack(side=tk.LEFT, padx=4)
         
         ctk.CTkLabel(rm_row2, text="(tecla spell)", font=ctk.CTkFont(family="Consolas", size=9),
-                    text_color=self.colors['text_subdued']).pack(side=tk.LEFT, padx=8)
+                    fg=self.colors['text_subdued']).pack(side=tk.LEFT, padx=8)
         
         # Row 3: Delay slider
         rm_row3 = ctk.CTkFrame(rm_config_inner, fg_color="transparent")
         rm_row3.pack(fill=tk.X, pady=4)
         
         ctk.CTkLabel(rm_row3, text="Delay:", font=ctk.CTkFont(family="Georgia", size=10, weight="bold"),
-                    text_color=self.colors['text_body'], width=80).pack(side=tk.LEFT)
+                    fg=self.colors['text_body'], width=80).pack(side=tk.LEFT)
         
         self.rm_delay = tk.IntVar(value=500)
         self.rm_delay_slider = ctk.CTkSlider(rm_row3, from_=100, to=2000, number_of_steps=38,
@@ -640,7 +649,7 @@ class AudioBook:
         
         self.rm_delay_label = ctk.CTkLabel(rm_row3, text="500ms", width=60,
                                            font=ctk.CTkFont(family="Consolas", size=10, weight="bold"),
-                                           text_color=self.colors['status_on'])
+                                           fg=self.colors['status_on'])
         self.rm_delay_label.pack(side=tk.LEFT, padx=4)
         self.rm_delay.trace('w', lambda *args: self.rm_delay_label.configure(text=f"{self.rm_delay.get()}ms"))
         
@@ -649,7 +658,7 @@ class AudioBook:
         rm_row4.pack(fill=tk.X, pady=4)
         
         ctk.CTkLabel(rm_row4, text="Potions:", font=ctk.CTkFont(family="Georgia", size=10, weight="bold"),
-                    text_color=self.colors['text_body'], width=80).pack(side=tk.LEFT)
+                    fg=self.colors['text_body'], width=80).pack(side=tk.LEFT)
         
         self.rm_potions_count = tk.IntVar(value=3)
         ctk.CTkButton(rm_row4, text="-", width=28, height=24, corner_radius=4,
@@ -657,7 +666,7 @@ class AudioBook:
                      command=lambda: self.rm_potions_count.set(max(1, self.rm_potions_count.get()-1))).pack(side=tk.LEFT)
         self.rm_potions_label = ctk.CTkLabel(rm_row4, text="3", width=30,
                                              font=ctk.CTkFont(family="Consolas", size=11, weight="bold"),
-                                             text_color=self.colors['status_on'])
+                                             fg=self.colors['status_on'])
         self.rm_potions_label.pack(side=tk.LEFT)
         ctk.CTkButton(rm_row4, text="+", width=28, height=24, corner_radius=4,
                      fg_color=self.colors['button_default'], hover_color=self.colors['button_hover'],
@@ -665,14 +674,14 @@ class AudioBook:
         self.rm_potions_count.trace('w', lambda *args: self.rm_potions_label.configure(text=str(self.rm_potions_count.get())))
         
         ctk.CTkLabel(rm_row4, text="por ciclo", font=ctk.CTkFont(family="Consolas", size=9),
-                    text_color=self.colors['text_subdued']).pack(side=tk.LEFT, padx=8)
+                    fg=self.colors['text_subdued']).pack(side=tk.LEFT, padx=8)
         
         # Row 5: Casts per cycle
         rm_row5 = ctk.CTkFrame(rm_config_inner, fg_color="transparent")
         rm_row5.pack(fill=tk.X, pady=4)
         
         ctk.CTkLabel(rm_row5, text="Casts:", font=ctk.CTkFont(family="Georgia", size=10, weight="bold"),
-                    text_color=self.colors['text_body'], width=80).pack(side=tk.LEFT)
+                    fg=self.colors['text_body'], width=80).pack(side=tk.LEFT)
         
         self.rm_casts_count = tk.IntVar(value=1)
         ctk.CTkButton(rm_row5, text="-", width=28, height=24, corner_radius=4,
@@ -680,7 +689,7 @@ class AudioBook:
                      command=lambda: self.rm_casts_count.set(max(1, self.rm_casts_count.get()-1))).pack(side=tk.LEFT)
         self.rm_casts_label = ctk.CTkLabel(rm_row5, text="1", width=30,
                                            font=ctk.CTkFont(family="Consolas", size=11, weight="bold"),
-                                           text_color=self.colors['status_on'])
+                                           fg=self.colors['status_on'])
         self.rm_casts_label.pack(side=tk.LEFT)
         ctk.CTkButton(rm_row5, text="+", width=28, height=24, corner_radius=4,
                      fg_color=self.colors['button_default'], hover_color=self.colors['button_hover'],
@@ -688,29 +697,29 @@ class AudioBook:
         self.rm_casts_count.trace('w', lambda *args: self.rm_casts_label.configure(text=str(self.rm_casts_count.get())))
         
         ctk.CTkLabel(rm_row5, text="por ciclo", font=ctk.CTkFont(family="Consolas", size=9),
-                    text_color=self.colors['text_subdued']).pack(side=tk.LEFT, padx=8)
+                    fg=self.colors['text_subdued']).pack(side=tk.LEFT, padx=8)
         
         # Row 6: Pause hotkey
         rm_row6 = ctk.CTkFrame(rm_config_inner, fg_color="transparent")
         rm_row6.pack(fill=tk.X, pady=4)
         
         ctk.CTkLabel(rm_row6, text="Pausar:", font=ctk.CTkFont(family="Georgia", size=10, weight="bold"),
-                    text_color=self.colors['text_body'], width=80).pack(side=tk.LEFT)
+                    fg=self.colors['text_body'], width=80).pack(side=tk.LEFT)
         
         self.rm_pause_btn = ctk.CTkButton(rm_row6, text=self.rm_pause_hotkey.get(), width=50, height=24,
                                           corner_radius=6, fg_color=self.colors['button_default'],
                                           hover_color=self.colors['button_hover'],
-                                          text_color="#FFFFFF", font=ctk.CTkFont(family="Consolas", size=10, weight="bold"),
+                                          fg="#FFFFFF", font=ctk.CTkFont(family="Consolas", size=10, weight="bold"),
                                           command=self.change_runemaker_pause_hotkey)
         self.rm_pause_btn.pack(side=tk.LEFT, padx=4)
         
         self.rm_pause_status = ctk.CTkLabel(rm_row6, text="", width=80,
                                             font=ctk.CTkFont(family="Consolas", size=9, weight="bold"),
-                                            text_color=self.colors['status_off'])
+                                            fg=self.colors['status_off'])
         self.rm_pause_status.pack(side=tk.LEFT, padx=4)
         
         ctk.CTkLabel(rm_row6, text="(pausar/continuar)", font=ctk.CTkFont(family="Consolas", size=8),
-                    text_color=self.colors['text_subdued']).pack(side=tk.LEFT, padx=5)
+                    fg=self.colors['text_subdued']).pack(side=tk.LEFT, padx=5)
         
         # Cycle info box
         rm_info_card = ctk.CTkFrame(runemaker_scroll, fg_color=self.colors['bg_primary'],
@@ -719,12 +728,12 @@ class AudioBook:
         
         self.rm_cycle_info = ctk.CTkLabel(rm_info_card, text="Ciclo: 3 potions + 1 cast -> repete",
                                           font=ctk.CTkFont(family="Consolas", size=9),
-                                          text_color=self.colors['text_body'])
+                                          fg=self.colors['text_body'])
         self.rm_cycle_info.pack(pady=4)
         
         self.rm_cycle_label = ctk.CTkLabel(rm_info_card, text="",
                                            font=ctk.CTkFont(family="Consolas", size=10, weight="bold"),
-                                           text_color=self.colors['status_on'])
+                                           fg=self.colors['status_on'])
         self.rm_cycle_label.pack(pady=2)
         
         # ========== HYPER GRAB TAB CONTENT ==========
@@ -753,11 +762,11 @@ class AudioBook:
         
         ctk.CTkLabel(hg_toggle_inner, text="Hyper Grab", 
                     font=ctk.CTkFont(family="Georgia", size=12, weight="bold"),
-                    text_color=self.colors['text_header']).pack(side=tk.LEFT, padx=8)
+                    fg=self.colors['text_header']).pack(side=tk.LEFT, padx=8)
         
         self.hg_status_label = ctk.CTkLabel(hg_toggle_inner, text="[OFF]",
                                             font=ctk.CTkFont(family="Consolas", size=10, weight="bold"),
-                                            text_color=self.colors['status_off'])
+                                            fg=self.colors['status_off'])
         self.hg_status_label.pack(side=tk.RIGHT, padx=10)
         
         # Config card
@@ -773,33 +782,33 @@ class AudioBook:
         hg_row1.pack(fill=tk.X, pady=4)
         
         ctk.CTkLabel(hg_row1, text="Hotkey:", font=ctk.CTkFont(family="Georgia", size=10, weight="bold"),
-                    text_color=self.colors['text_body'], width=80).pack(side=tk.LEFT)
+                    fg=self.colors['text_body'], width=80).pack(side=tk.LEFT)
         
         self.hg_hotkey_btn = ctk.CTkButton(hg_row1, text=self.hypergrab_hotkey.get(), width=50, height=24,
                                            corner_radius=6, fg_color=self.colors['selection'],
                                            hover_color=self.colors['button_hover'],
-                                           text_color="#FFFFFF", font=ctk.CTkFont(family="Consolas", size=10, weight="bold"),
+                                           fg="#FFFFFF", font=ctk.CTkFont(family="Consolas", size=10, weight="bold"),
                                            command=self.change_hypergrab_hotkey)
         self.hg_hotkey_btn.pack(side=tk.LEFT, padx=4)
         
         ctk.CTkLabel(hg_row1, text="(arrasta item pra BP)", font=ctk.CTkFont(family="Consolas", size=9),
-                    text_color=self.colors['text_subdued']).pack(side=tk.LEFT, padx=8)
+                    fg=self.colors['text_subdued']).pack(side=tk.LEFT, padx=8)
         
         # Row 2: Backpack slot position
         hg_row2 = ctk.CTkFrame(hg_config_inner, fg_color="transparent")
         hg_row2.pack(fill=tk.X, pady=4)
         
         ctk.CTkLabel(hg_row2, text="Slot BP:", font=ctk.CTkFont(family="Georgia", size=10, weight="bold"),
-                    text_color=self.colors['text_body'], width=80).pack(side=tk.LEFT)
+                    fg=self.colors['text_body'], width=80).pack(side=tk.LEFT)
         
         ctk.CTkButton(hg_row2, text="📍 Gravar", width=80, height=24, corner_radius=6,
                      fg_color=self.colors['button_default'], hover_color=self.colors['button_hover'],
-                     text_color=self.colors['text_body'], font=ctk.CTkFont(size=10),
+                     fg=self.colors['text_body'], font=ctk.CTkFont(size=10),
                      command=self.record_hypergrab_bp).pack(side=tk.LEFT, padx=4)
         
         self.hg_bp_status = ctk.CTkLabel(hg_row2, text="[Nao gravado]", width=120,
                                          font=ctk.CTkFont(family="Consolas", size=9, weight="bold"),
-                                         text_color=self.colors['text_subdued'])
+                                         fg=self.colors['text_subdued'])
         self.hg_bp_status.pack(side=tk.LEFT, padx=8)
         
         # Info box
@@ -809,7 +818,7 @@ class AudioBook:
         
         ctk.CTkLabel(hg_info_card, text="Aperte hotkey -> item sob o mouse vai INSTANTANEAMENTE pra BP",
                     font=ctk.CTkFont(family="Consolas", size=9),
-                    text_color=self.colors['text_body']).pack(pady=6)
+                    fg=self.colors['text_body']).pack(pady=6)
         
         # ========== SETTINGS TAB CONTENT ==========
         settings_scroll = ctk.CTkScrollableFrame(self.tab_settings, fg_color="transparent")
@@ -827,14 +836,14 @@ class AudioBook:
         
         ctk.CTkLabel(movement_inner, text="Modo de Movimento:", 
                     font=ctk.CTkFont(family="Georgia", size=10, weight="bold"),
-                    text_color=self.colors['text_header']).pack(side=tk.LEFT, padx=4)
+                    fg=self.colors['text_header']).pack(side=tk.LEFT, padx=4)
         
         ctk.CTkSwitch(movement_inner, text="Teleporte Instantaneo", width=40, height=20,
                      switch_width=36, switch_height=18,
                      progress_color=self.colors['switch_on'],
                      button_color="#FFFFFF", fg_color=self.colors['switch_off'],
                      variable=self.instant_movement, font=ctk.CTkFont(family="Georgia", size=9),
-                     text_color=self.colors['text_body']).pack(side=tk.LEFT, padx=8)
+                     fg=self.colors['text_body']).pack(side=tk.LEFT, padx=8)
         
         # Custom hotkey management card
         hotkey_card = ctk.CTkFrame(settings_scroll, fg_color=self.colors['bg_secondary'],
@@ -846,7 +855,7 @@ class AudioBook:
         
         ctk.CTkLabel(hotkey_inner, text="Custom Hotkeys:", 
                     font=ctk.CTkFont(family="Georgia", size=10, weight="bold"),
-                    text_color=self.colors['text_header']).pack(side=tk.LEFT, padx=4)
+                    fg=self.colors['text_header']).pack(side=tk.LEFT, padx=4)
         
         ctk.CTkButton(hotkey_inner, text="+", width=32, height=24, corner_radius=6,
                      fg_color=self.colors['selection'], hover_color=self.colors['button_hover'],
@@ -897,11 +906,11 @@ class AudioBook:
         
         ctk.CTkLabel(targeting_header, text="Auto-Target Configuration",
                     font=ctk.CTkFont(family="Georgia", size=12, weight="bold"),
-                    text_color=self.colors['text_header']).pack(pady=8)
+                    fg=self.colors['text_header']).pack(pady=8)
         
         ctk.CTkLabel(targeting_header, text="Use o botao de calibrar para configurar o auto-target",
                     font=ctk.CTkFont(family="Georgia", size=9),
-                    text_color=self.colors['text_body']).pack(pady=4)
+                    fg=self.colors['text_body']).pack(pady=4)
         
         # Load quick configs from saved data
         self.load_quick_configs()
@@ -1059,7 +1068,7 @@ class AudioBook:
             dialog.after(100, lambda: mouse.Listener(on_click=on_click).start())
         
         tk.Button(dialog, text="Iniciar Gravacao", command=start_recording,
-                 bg=self.colors['button_default'], text_color=self.colors['text_body'],
+                 bg=self.colors['button_default'], fg=self.colors['text_body'],
                  font=('Georgia', 10, 'bold'), padx=15, pady=5).pack(pady=10)
         
         def save_positions():
@@ -1074,15 +1083,15 @@ class AudioBook:
             self.save_config()
             
             self.rm_potion_status.configure(text=f"[OK] ({clicks_recorded[0]['x']},{clicks_recorded[0]['y']})", 
-                                         text_color=self.colors['status_on'])
+                                         fg=self.colors['status_on'])
             dialog.destroy()
             self.ember_info("Sucesso", "Posicoes da potion gravadas!")
         
         tk.Button(dialog, text="Salvar", command=save_positions,
-                 bg=self.colors['selection'], text_color=self.colors['text_header'],
+                 bg=self.colors['selection'], fg=self.colors['text_header'],
                  font=('Georgia', 10, 'bold'), padx=20, pady=5).pack(pady=5)
         tk.Button(dialog, text="Cancelar", command=dialog.destroy,
-                 bg=self.colors['button_destructive'], text_color=self.colors['text_body'],
+                 bg=self.colors['button_destructive'], fg=self.colors['text_body'],
                  font=('Georgia', 9), padx=15, pady=3).pack()
     
     def change_runemaker_hotkey(self, hotkey_type):
@@ -1121,10 +1130,10 @@ class AudioBook:
                 dialog.destroy()
         
         tk.Button(dialog, text="Salvar", command=save_hotkey,
-                 bg=self.colors['button_default'], text_color=self.colors['text_body'],
+                 bg=self.colors['button_default'], fg=self.colors['text_body'],
                  font=('Georgia', 10, 'bold'), padx=20, pady=5).pack(pady=15)
         tk.Button(dialog, text="Cancelar", command=lambda: [listener.stop(), dialog.destroy()],
-                 bg=self.colors['button_destructive'], text_color=self.colors['text_body'],
+                 bg=self.colors['button_destructive'], fg=self.colors['text_body'],
                  font=('Georgia', 10), padx=15, pady=3).pack()
     
     def change_runemaker_pause_hotkey(self):
@@ -1163,10 +1172,10 @@ class AudioBook:
                 dialog.destroy()
         
         tk.Button(dialog, text="Salvar", command=save_hotkey,
-                 bg=self.colors['button_default'], text_color=self.colors['text_body'],
+                 bg=self.colors['button_default'], fg=self.colors['text_body'],
                  font=('Georgia', 10, 'bold'), padx=20, pady=5).pack(pady=15)
         tk.Button(dialog, text="Cancelar", command=lambda: [listener.stop(), dialog.destroy()],
-                 bg=self.colors['button_destructive'], text_color=self.colors['text_body'],
+                 bg=self.colors['button_destructive'], fg=self.colors['text_body'],
                  font=('Georgia', 10), padx=15, pady=3).pack()
     
     def toggle_runemaker_pause(self):
@@ -1177,8 +1186,8 @@ class AudioBook:
         self.runemaker_paused = not self.runemaker_paused
         
         if self.runemaker_paused:
-            self.rm_status_label.configure(text="[PAUSADO]", text_color='#FFA500')
-            self.rm_pause_status.configure(text="[PAUSADO]", text_color='#FFA500')
+            self.rm_status_label.configure(text="[PAUSADO]", fg='#FFA500')
+            self.rm_pause_status.configure(text="[PAUSADO]", fg='#FFA500')
             print("[RUNEMAKER] Pausado!")
         else:
             self.rm_status_label.configure(text="[RODANDO]", text_color=self.colors['status_on'])
@@ -1250,7 +1259,7 @@ class AudioBook:
             print("[RUNEMAKER] ERRO: Grave as posicoes da potion primeiro!")
             self.runemaker_enabled.set(False)
             self.runemaker_running = False
-            self.rm_status_label.configure(text="[ERRO: Grave potion]", text_color='#FF6B35')
+            self.rm_status_label.configure(text="[ERRO: Grave potion]", fg='#FF6B35')
             return
         
         while self.runemaker_running:
@@ -1347,7 +1356,7 @@ class AudioBook:
             clicks = rm.get('potion_clicks', [])
             if clicks and len(clicks) >= 2:
                 self.rm_potion_status.configure(text=f"[OK] ({clicks[0]['x']},{clicks[0]['y']})", 
-                                             text_color=self.colors['status_on'])
+                                             fg=self.colors['status_on'])
             else:
                 self.rm_potion_status.configure(text="[Nao gravado]", text_color=self.colors['text_subdued'])
         
@@ -1379,7 +1388,7 @@ class AudioBook:
                 bg=self.colors['bg_primary'], fg=self.colors['text_body']).pack(pady=10)
         
         key_label = tk.Label(dialog, text=self.hypergrab_hotkey.get(), font=('Consolas', 16, 'bold'),
-                bg=self.colors['bg_inset'], text_color=self.colors['status_on'], padx=20, pady=10)
+                bg=self.colors['bg_inset'], fg=self.colors['status_on'], padx=20, pady=10)
         key_label.pack(pady=10)
         
         def on_key(event):
@@ -1417,7 +1426,7 @@ class AudioBook:
                 self.save_config()
                 
                 # Update UI
-                self.hg_bp_status.configure(text=f"[OK] ({x},{y})", text_color=self.colors['status_on'])
+                self.hg_bp_status.configure(text=f"[OK] ({x},{y})", fg=self.colors['status_on'])
                 status.config(text=f"Gravado: ({x},{y})")
                 
                 listener.stop()
@@ -1483,7 +1492,7 @@ class AudioBook:
             bp_pos = hg.get('bp_pos')
             if bp_pos:
                 self.hg_bp_status.configure(text=f"[OK] ({bp_pos['x']},{bp_pos['y']})", 
-                                         text_color=self.colors['status_on'])
+                                         fg=self.colors['status_on'])
                 self.hypergrab_bp_pos = bp_pos
             else:
                 self.hg_bp_status.configure(text="[Nao gravado]", text_color=self.colors['text_subdued'])
@@ -1516,7 +1525,7 @@ class AudioBook:
         
         btn = tk.Button(dialog, text="✓ OK", width=10,
                        command=dialog.destroy,
-                       bg=self.colors['button_default'], text_color=self.colors['text_body'],
+                       bg=self.colors['button_default'], fg=self.colors['text_body'],
                        font=('Arial', 10, 'bold'), relief=tk.RAISED, borderwidth=2,
                        activebackground=self.colors['button_hover'])
         btn.pack(pady=15)
@@ -1537,7 +1546,7 @@ class AudioBook:
         
         btn = tk.Button(dialog, text="OK", width=10,
                        command=dialog.destroy,
-                       bg=self.colors['border_dark'], text_color=self.colors['text_body'],
+                       bg=self.colors['border_dark'], fg=self.colors['text_body'],
                        font=('Arial', 10, 'bold'), relief=tk.RAISED, borderwidth=2,
                        activebackground=self.colors['button_hover'])
         btn.pack(pady=15)
@@ -1600,7 +1609,7 @@ class AudioBook:
         # Status display
         hotkey_var = tk.StringVar(value="Aguardando...")
         status_label = tk.Label(dialog, textvariable=hotkey_var, font=('Consolas', 12, 'bold'),
-                               bg=self.colors['bg_secondary'], text_color=self.colors['focus_glow'],
+                               bg=self.colors['bg_secondary'], fg=self.colors['focus_glow'],
                                relief=tk.GROOVE, borderwidth=2, padx=15, pady=10)
         status_label.pack(pady=10, padx=20, fill=tk.X)
         
@@ -1753,7 +1762,7 @@ class AudioBook:
         # Title with ember colors
         tk.Label(dialog, text=f"{title} - Gravação de Posições", 
                 font=('Georgia', 16, 'bold'), bg=self.colors['bg_primary'], 
-                text_color=self.colors['text_header']).pack(pady=15)
+                fg=self.colors['text_header']).pack(pady=15)
         
         if is_sd:
             instructions = "1. Clique na posição da RUNA SD\n2. Sistema irá detectar targets automaticamente!"
@@ -1770,11 +1779,11 @@ class AudioBook:
         
         # Instructions with ember colors
         tk.Label(dialog, text=instructions, font=('Arial', 11), bg=self.colors['bg_primary'],
-                text_color=self.colors['text_body'], justify=tk.LEFT).pack(pady=10)
+                fg=self.colors['text_body'], justify=tk.LEFT).pack(pady=10)
         
         status_var = tk.StringVar(value="Clique 'Iniciar' para começar a gravar...")
         status_label = tk.Label(dialog, textvariable=status_var, font=('Consolas', 10, 'bold'), 
-                               bg=self.colors['bg_secondary'], text_color=self.colors['focus_glow'],
+                               bg=self.colors['bg_secondary'], fg=self.colors['focus_glow'],
                                wraplength=500, relief=tk.GROOVE, borderwidth=2, padx=10, pady=10)
         status_label.pack(pady=15, padx=15, fill=tk.X)
         
@@ -1850,7 +1859,7 @@ class AudioBook:
         btn_frame.pack(pady=20)
         
         tk.Button(btn_frame, text="📍 Iniciar Gravação", command=start_recording,
-                 bg=self.colors['button_default'], text_color=self.colors['text_body'],
+                 bg=self.colors['button_default'], fg=self.colors['text_body'],
                  font=('Arial', 10, 'bold'), relief=tk.RAISED, borderwidth=2,
                  activebackground=self.colors['button_hover'], padx=10, pady=5).pack(side=tk.LEFT, padx=5)
         
@@ -1861,7 +1870,7 @@ class AudioBook:
         save_btn.pack(side=tk.LEFT, padx=5)
         
         tk.Button(btn_frame, text="Cancelar", command=dialog.destroy,
-                 bg=self.colors['button_destructive'], text_color=self.colors['text_body'],
+                 bg=self.colors['button_destructive'], fg=self.colors['text_body'],
                  font=('Arial', 10, 'bold'), relief=tk.RAISED, borderwidth=2,
                  activebackground=self.colors['border'], padx=10, pady=5).pack(side=tk.LEFT, padx=5)
         
@@ -2471,7 +2480,7 @@ Pressione 'Iniciar' quando estiver pronto!"""
         
         # Cancel button
         tk.Button(instruction_dialog, text="Cancelar", command=instruction_dialog.destroy,
-                 bg=self.colors['button_destructive'], text_color=self.colors['text_body'],
+                 bg=self.colors['button_destructive'], fg=self.colors['text_body'],
                  font=('Arial', 10), padx=20, pady=5).pack(pady=5)
     
     def open_auto_uh_config(self):
@@ -4174,7 +4183,7 @@ Pressione 'Iniciar' quando estiver pronto!"""
         dialog.grab_set()
         
         tk.Label(dialog, text="Nome do novo perfil:", bg=self.colors['bg_secondary'],
-                text_color=self.colors['text_header'], font=('Georgia', 11)).pack(pady=10)
+                fg=self.colors['text_header'], font=('Georgia', 11)).pack(pady=10)
         
         name_entry = tk.Entry(dialog, font=('Georgia', 11), width=30)
         name_entry.pack(pady=5)
@@ -4211,7 +4220,7 @@ Pressione 'Iniciar' quando estiver pronto!"""
             dialog.destroy()
         
         tk.Button(dialog, text="Criar", command=create, bg=self.colors['button_default'],
-                 text_color=self.colors['text_header'], font=('Georgia', 10, 'bold'),
+                 fg=self.colors['text_header'], font=('Georgia', 10, 'bold'),
                  padx=20, pady=5).pack(pady=10)
     
     def rename_profile(self):
@@ -4231,7 +4240,7 @@ Pressione 'Iniciar' quando estiver pronto!"""
         dialog.grab_set()
         
         tk.Label(dialog, text=f"Novo nome para '{old_name}':", bg=self.colors['bg_secondary'],
-                text_color=self.colors['text_header'], font=('Georgia', 11)).pack(pady=10)
+                fg=self.colors['text_header'], font=('Georgia', 11)).pack(pady=10)
         
         name_entry = tk.Entry(dialog, font=('Georgia', 11), width=30)
         name_entry.insert(0, old_name)
@@ -4265,7 +4274,7 @@ Pressione 'Iniciar' quando estiver pronto!"""
             dialog.destroy()
         
         tk.Button(dialog, text="Renomear", command=rename, bg=self.colors['button_default'],
-                 text_color=self.colors['text_header'], font=('Georgia', 10, 'bold'),
+                 fg=self.colors['text_header'], font=('Georgia', 10, 'bold'),
                  padx=20, pady=5).pack(pady=10)
     
     def delete_profile(self):
